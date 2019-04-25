@@ -1,10 +1,13 @@
 <?php
-require 'config.php';
+include_once 'config1.php';
+if (!isset($_SESSION['username'])) {
+    $_SESSION['msg'] = "You must log in first";
 
-if(isset($error)){ echo $error; } /// figure out later (check)
- 
- $sql = "SELECT * FROM user_profile"; // filter out user list as per your added contacts - SPRINT 3
- $result = $connect->query($sql);
+}
+$username=$_SESSION['username'];
+$sql = "SELECT * FROM contacts WHERE myusername = '" . $_SESSION['username'] . "'";
+$result = mysqli_query($db,$sql);
+$r = mysqli_fetch_array($result);
  ?>
 <!DOCTYPE html>
 <html>
@@ -26,8 +29,8 @@ if(isset($error)){ echo $error; } /// figure out later (check)
 <body>
 <!--- Header --->   <!--- Header --->
 <header>
-    <nav class="navbar navbar-inverse">
-        <div class="container-fluid">
+    <nav class="navbar navbar-inverse" style="width: 1400px">
+        <div class="container-fluid" >
             <div class="navbar-header">
                 <a class="active navbar-brand" href="index.php">VIVA CARD</a>
             </div>
@@ -47,8 +50,8 @@ if(isset($error)){ echo $error; } /// figure out later (check)
     </nav>
 </header>
 <!--- Header End--->
-<div align="center">
-    <div style=" border: solid 1px #006D9C; " align="center">
+<div align="center" style="width: 1400px">
+    <div style="  border: solid 1px #006D9C; " align="center">
         <?php
         if(isset($errMsg)){
             echo '<div style="color:green;text-align:center;font-size:17px;">'.$errMsg.'</div>';
@@ -57,11 +60,11 @@ if(isset($error)){ echo $error; } /// figure out later (check)
         <section class="main-container">
             <div style="background-color:grey; color:#FFFFFF; padding:10px;"><h3>View Contacts</h3></div>
             <div style="margin: 15px">
-<div class="container">
+<div class="container" >
 	<div class="row">
-		<table class="table">
+		<table width="200px" class="table">
 			<tr>
-				<th>Id</th>
+
 				<th>Full Name</th>
 				<th>E-Mail</th>
 				<th>Job Title</th>
@@ -71,27 +74,31 @@ if(isset($error)){ echo $error; } /// figure out later (check)
                 <th>Linkedin</th>
                 <th>Twitter</th>
                 <th>Instagram</th>
-                <th>Facebook</th>
-				<th>Manage</th>
+                <th >Facebook</th>
+
             </tr>
-			<?php 
-			while($r = $result->fetch(PDO::FETCH_ASSOC)){
-			?>
+			<?php  $username=$r['myusername'];
+            $sql="SELECT * FROM contacts where myusername='$username'";
+            $result_set=mysqli_query($db,$sql);
+            while($r=mysqli_fetch_array($result_set))
+            {
+            ?>
 			<tr>
-				<td><?php echo $r['id']; ?></td>
-				<td><?php echo $r['firstname'] . " " . $r['lastname']; ?></td>
-				<td><?php echo $r['email']; ?></td>
-				<td><?php echo $r['jobtitle']; ?></td>
-				<td><?php echo $r['company']; ?></td>
-                <td><?php echo $r['job_desc']; ?></td>
-                <td><?php echo $r['telephone']; ?></td>
-                <td><?php echo $r['linkedin']; ?></td>
-                <td><?php echo $r['twitter']; ?></td>
-                <td><?php echo $r['instagram']; ?></td>
-                <td><?php echo $r['facebook']; ?></td>
-				<td><a href="updatecontact.php?id=<?php echo $r['id']; ?>">Edit</a> <a href="deletecontact.php?id=<?php echo $r['id']; ?>">Delete</a></td>
+				<td><?php echo $r['c_firstname'] . " " . $r['c_lastname']; ?></td>
+				<td><?php echo $r['c_email']; ?></td>
+				<td><?php echo $r['c_jobtitle']; ?></td>
+				<td><?php echo $r['c_company']; ?></td>
+                <td><?php echo $r['c_jobdescription']; ?></td>
+                <td><?php echo $r['c_telephone']; ?></td>
+                <td><?php echo $r['c_linkedin']; ?></td>
+                <td><?php echo $r['c_twitter']; ?></td>
+                <td><?php echo $r['c_instagram']; ?></td>
+                <td style="width: 10px"><?php echo $r['c_facebook']; ?></td>
+
 			</tr>
-			<?php } ?>
+            <?php
+                        }
+                        ?>
 		</table>
 	</div>
 </div>
@@ -130,13 +137,13 @@ if(isset($error)){ echo $error; } /// figure out later (check)
                                         Garthdee Road, Aberdeen, AB10 7QB, Scotland,<br>
                                         UK<br>
                                         <a href="mailto:groupe_cmm004@live.rgu.ac.uk">
-                                            <img src="assets/Images/email.png" class="img-thumbnail img-responsive" width="30px" height="20px"></a>
+                                            <img src="/assets/Images/email.png" class="img-thumbnail img-responsive" width="30px" height="20px"></a>
                                         <a href="#">
-                                            <img src="assets/Images/facebook.png" class="img-thumbnail img-responsive" width="30px" height="20px"></a>
+                                            <img src="/assets/Images/facebook.png" class="img-thumbnail img-responsive" width="30px" height="20px"></a>
                                         <a href="#">
-                                            <img src="assets/Images/twitter.png" class="img-thumbnail img-responsive" width="30px" height="20px"></a>
+                                            <img src="/assets/Images/twitter.png" class="img-thumbnail img-responsive" width="30px" height="20px"></a>
                                         <a href="#">
-                                            <img src="assets/Images/github.png" class="img-thumbnail img-responsive" width="30px" height="20px"></a>
+                                            <img src="/assets/Images/github.png" class="img-thumbnail img-responsive" width="30px" height="20px"></a>
 
                                     </center> </h6>
                             </address>

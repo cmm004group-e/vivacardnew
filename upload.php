@@ -1,3 +1,86 @@
+<?php
+include ('config1.php');
+
+if (!isset($_SESSION['username'])) {
+    $_SESSION['msg'] = "You must log in first";
+    header('location: login.php.php');
+}
+$sql = "SELECT * FROM user_profile WHERE username = '" . $_SESSION['username'] . "'";
+$result = mysqli_query($db,$sql);
+$row = mysqli_fetch_array($result);
+
+// Upload feature
+$output_dir = "vivacarduploads/";
+$allowedExts = array("jpg", "jpeg", "gif", "png","JPG",);
+$extension = @end(explode(".", $_FILES["myfile"]["name"]));
+if(isset($_POST['submit']))
+{
+    $user=$row['username'];
+    //Filter the file types , if you want.
+    if ((($_FILES["myfile"]["type"] == "image/gif")
+            || ($_FILES["myfile"]["type"] == "image/jpeg")
+            || ($_FILES["myfile"]["type"] == "image/JPG")
+            || ($_FILES["myfile"]["type"] == "image/png")
+            || ($_FILES["myfile"]["type"] == "image/pjpeg"))
+        && ($_FILES["myfile"]["size"] < 10000000)
+        && in_array($extension, $allowedExts))
+    {
+        if ($_FILES["myfile"]["error"] > 0)
+        {
+            echo "Return Code: " . $_FILES["myfile"]["error"] . "<br>";
+        }
+        if (file_exists($output_dir. $_FILES["myfile"]["name"]))
+        {
+            unlink($output_dir. $_FILES["myfile"]["name"]);
+        }
+        else
+        {
+            $pic=$_FILES["myfile"]["name"];
+            $conv=explode(".",$pic);
+            $ext=$conv['1'];
+
+            //move the uploaded file to uploads folder;
+            move_uploaded_file($_FILES["myfile"]["tmp_name"],$output_dir.$user.".".$ext);
+
+            $pics=$output_dir.$user.".".$ext;
+
+
+            $url=$user.".".$ext;
+
+            $update="update user_profile set profile_picture='$url' where username='$user'";
+
+            if($db->query($update)){
+                echo '<div data-alert class="alert-box success radius">';
+                echo  '<b>Success !</b>  Image Updated' ;
+                echo  '<a href="#" class="close">&times;</a>';
+                echo '</div>';
+                header('refresh:2;url=dashboard.php');
+            }
+            else{
+                echo '<div data-alert class="alert-box alert radius">';
+                echo  '<b>Error !</b> ' .$db->error ;
+                echo  '<a href="#" class="close">&times;</a>';
+                echo '</div>';
+            }
+
+
+
+        }
+
+    }
+    else{
+
+        echo '<div data-alert class="alert-box warning radius">';
+        echo  '<b>Warning !</b>  File not Uploaded, Check image' ;
+        echo  '<a href="#" class="close">&times;</a>';
+        echo '</div>';
+
+    }
+
+}
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -36,14 +119,14 @@
         </nav>
     </header>
     <!--- Header End--->
-<body>
+    <body>
 
-<form action="upload.php" method="post" enctype="multipart/form-data">
-    Upload a File:
-    <input type="file" name="myfile" id="fileToUpload">
-    <input type="submit" name="submit" value="Upload File Now" >
-</form>
-</body>
+    <form action="upload.php" method="post" enctype="multipart/form-data">
+        Upload a File:
+        <input type="file" name="myfile" id="fileToUpload">
+        <input type="submit" name="submit" value="Upload File Now" >
+    </form>
+    </body>
 
 
     <!---Footer start--->
@@ -91,48 +174,3 @@
     <!---Footer end--->
 </html>
 
-<?php
-
-$currentDir = getcwd();
-$uploadDirectory = "    vivacarduploads/";
-
-$errors = []; // Store all foreseen and unforseen errors here
-
-$fileExtensions = ['jpeg','jpg','png']; // Get all the file extensions
-
-$fileName = $_FILES['myfile'][ 'name'];
-$fileSize = $_FILES['myfile']['size'];
-$fileTmpName  = $_FILES['myfile']['tmp_name'];
-$fileType = $_FILES['myfile']['type'];
-$fileExtension = strtolower(end(explode('.',$fileName)));
-
-$uploadPath = $currentDir . $uploadDirectory . basename($fileName);
-
-if (isset($_POST['submit'])) {
-
-    if (! in_array($fileExtension,$fileExtensions)) {
-        $errors[] = "This file extension is not allowed. Please upload a JPEG or PNG file";
-    }
-
-    if ($fileSize > 2000000) {
-        $errors[] = "This file is more than 2MB. Sorry, it has to be less than or equal to 2MB";
-    }
-
-    if (empty($errors)) {
-        $didUpload = move_uploaded_file($fileTmpName, $uploadPath);
-
-        if ($didUpload) {
-            echo "The file " . basename($fileName) . " has been uploaded";
-            header('Location:update_profile1.php');
-        } else {
-            echo "An error occurred somewhere. Try again or contact the admin";
-        }
-    } else {
-        foreach ($errors as $error) {
-            echo $error . "These are the errors" . "\n";
-        }
-    }
-}
-
-
-?>

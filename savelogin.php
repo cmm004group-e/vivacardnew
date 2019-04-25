@@ -25,7 +25,7 @@ if(isset($_POST['login'])) {
                 $errMsg = "User $username not found.";
             }
             else {
-                if(password_verify($password, $data['password'])){
+                if($password == $data['password']) {
                     $_SESSION['firstname'] = $data['firstname'];
                     $_SESSION['lastname'] = $data['lastname'];
                     $_SESSION['email'] = $data['email'];
@@ -42,7 +42,7 @@ if(isset($_POST['login'])) {
 
 
 
-                    header('Location: dashboard.php');
+                    header('Location: ');
                     exit;
                 }
                 else

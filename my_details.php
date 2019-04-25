@@ -1,43 +1,56 @@
 <?php
-// include QR_BarCode class
-include "QR_BarCode.php";
 
-//// Selecting from Database
-include_once 'config.php';
-$username = $_SESSION['username']; ///Verifying the logged in user
-$sql = "SELECT * FROM user_profile  WHERE username = :username";
-$stmt1 = $connect->prepare($sql);
-$stmt1->bindValue(':username', $username);
+include 'config1.php';
 
-$stmt1->execute();
+//   $db=mysqli_connect('localhost','root','','db_group_e_cm004');
+$user = $_GET['user']; // sanitize is not a function, just implying that data is insecure and requires to be santized through whatever method you choose.
+$details = "SELECT * FROM user_profile WHERE username='$user'";
+$stmt=mysqli_query($db,$details);
+$row=mysqli_fetch_array($stmt);
 
-$row = $stmt1->fetch(PDO::FETCH_ASSOC);
+$firstname=$row['firstname'];
+$lastname=$row['lastname'];
+$email=$row['email'];
+$jobtitle=$row['jobtitle'];
+$company=$row['company'];
+$jobdesc=$row['job_desc'];
+$telephone=$row['telephone'];
+$linkedin=$row['linkedin'];
+$instagram=$row['instagram'];
+$twitter=$row['twitter'];
+$facebook=$row['facebook'];
 
-if($row['username'] > 0 ) {
 
+    $username = $_SESSION['username']; ///Verifying the logged in user
+    //  $query = mysqli_query($con, "INSERT INTO contacts VALUES( )
+if ($row) {
 
-    foreach ($connect->query($sql) as $row);
+$query = "SELECT * FROM contacts WHERE myusername = '$username'AND username_contact ='$user'" ;
+$result = mysqli_query($db, $query);
+$count = mysqli_num_rows($result);
+if ($count >=1) {
+
 }
+else {
 
-
-if(isset($errMsg)){
-    echo '<div style="color:green;text-align:center;font-size:17px;">'.$errMsg.'</div>';
+    $sql = "INSERT INTO contacts (myusername, c_firstname, c_lastname,c_email, c_jobtitle,c_company,c_jobdescription,c_telephone,c_linkedin, c_facebook, c_twitter, c_instagram,username_contact) VALUES ('$username','$firstname','$lastname','$email', '$jobtitle', '$company','$jobdesc','$telephone', '$linkedin', '$facebook', '$twitter','$instagram','$user')";
+    $result = mysqli_query($db, $sql);
 }
+}
+$firstname=$row['firstname'];
+$lastname=$row['lastname'];
+$email=$row['email'];
+$jobtitle=$row['jobtitle'];
+$company=$row['company'];
+$jobdesc=$row['job_desc'];
+$telephone=$row['telephone'];
+$linkedin=$row['linkedin'];
+$instagram=$row['instagram'];
+$twitter=$row['twitter'];
+$facebook=$row['facebook'];
 
 
-$tempDir = 'temp/';
-$firstname = $row['firstname'];
-$lastname = $row['lastname'];
-$email = $row['email'];
-$jobtitle = $row['jobtitle'];
-$company = $row['company'];
-$job_desc = $row['job_desc'];
-$telephone = $row['telephone'];
-$linkedin = $row['linkedin'];
-$twitter = $row['twitter'];
-$instagram = $row['instagram'];
-$facebook= $row['facebook'];
-
+//  header('Location:dashboard.php');
 
 ?>
 
@@ -88,27 +101,26 @@ $facebook= $row['facebook'];
             echo '<div style="color:green;text-align:center;font-size:17px;">'.$errMsg.'</div>';
         }
         $sql="SELECT * FROM user_profile";
-        $result = $connect->query($sql);
+        $result = $db->query($sql);
         ?>
 
         <!--- Main body start --->
-        <section class="main-container">
-            <h2 style="text-transform: uppercase"><?php echo $row['firstname']; ?>'s card</h2>
+        <section class="main-container" style="height: 480px">
+            <h2 style="font-size: 25px;text-transform: capitalize"><?php echo $row['firstname']; ?>'s card</h2>
             <!-- Insert info into page from database --->
 
-            <div class='card'>
-
+            <div class='card' style="width: 450px ; height: 270px">
+            <form method="post" action="savecard.php">
 
                 <img class='top-image' src='vivacarduploads/esha.JPG' alt="user photo" title="user photo" ">
 
 
-                 <p class="logo">VIVA CARD</p>
+                 <p style="font-size: 20px ;  width: 220px" class="logo">VIVA CARD</p>
 
-                <p><?php echo $row['firstname']; ?>  <?php echo $row['lastname']; ?></p>
-
-                <p><?php echo $row['company']; ?></p>
+                <p style="text-transform: capitalize"><?php echo $row['firstname']; ?>  <?php echo $row['lastname']; ?></p>
 
                 <p><?php echo $row['jobtitle']; ?></p>
+                <p><?php echo $row['company']; ?></p>
 
                 <p><?php echo $row['telephone']; ?></p>
 
@@ -126,53 +138,17 @@ $facebook= $row['facebook'];
 
                 <a href="<?php echo $row['facebook']; ?>">
                     <img src="assets/Images/facebook.png" class="img-thumbnail img-responsive" width="30px" height="20px"></a></p>
+                    <br>
+                <input style="background-color: white" type="submit" name='save' value="save" class='submit'>
 
-
-
+            </form>
             </div>
 
 
     </div>
 
-
-
-
-
-
-
     <!--- Main body end --->
-    <!---       <section class="main-container">
-            <fieldset style="margin: 15px">
-                <fieldset>
-                    <form class="signup-form" action="" method="get">
-                        Firstname <br>
-                        <input type="text" name="firstname" value="<?php echo $_SESSION['firstname']; ?>" class="box" readonly/><br /><br />
-                        Lastname <br>
-                        <input type="text" name="lastname" value="<?php echo $_SESSION['lastname']; ?>" class="box" readonly/><br /><br />
-                        Email <br>
-                        <a href="mailto:<?php echo $_SESSION['email']; ?>"><input type="email" name="email" value="<?php echo $_SESSION['email']; ?>"  class="box" readonly/></a><br /><br />
-                        Job Title <br>
-                        <input type="text" name="jobtitle" value="<?php echo $_SESSION['jobtitle']; ?>" class="box" readonly/><br /><br />
-                        Company <br>
-                        <input type="text" name="company" value="<?php echo $_SESSION['company']; ?>" class="box" readonly/><br /><br />
-                        Job Description <br>
-                        <input type="text" name="job_desc"  value="<?php echo $_SESSION['job_desc']; ?>" class="box" readonly/><br /><br />
-                        Telephone <br>
-                        <input type="int" name="telephone"  value="<?php echo $_SESSION['telephone']; ?>" class="box" readonly/><br /><br />
-                        Linkedin <br>
-                        <a href="?php echo $_SESSION['linkedin']; ?>"><input type="url" name="linkedin" value="<?php echo $_SESSION['linkedin']; ?>" class="box" readonly/></a><br /><br />
-                        Twitter <br>
-                        <a href="<?php echo $_SESSION['twitter']; ?>"></a><input type="url" name="twitter" value="<?php echo $_SESSION['twitter']; ?>" class="box" readonly/></a><br /><br />
-                        Instagram <br>
-                        <a href="<?php echo $_SESSION['instagram']; ?>" ><input type="url" name="instagram" value="<?php echo $_SESSION['instagram']; ?>" class="box" readonly/></a><br /><br />
-                        Facebook <br>
-                        <a href="<?php echo $_SESSION['facebook']; ?>"><input type="url" name="facebook" value="<?php echo $_SESSION['facebook']; ?>" class="box" readonly/></a><br /><br />
-                    </form>
-                </fieldset>
-    </div>
-</div>
-</section>
-</div>   --->
+
     <!---Footer start--->
     <div class="container-fluid text-center">
         <footer class=“col-md-12">

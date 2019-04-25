@@ -23,7 +23,7 @@ if(isset($errMsg)){
     echo '<div style="color:green;text-align:center;font-size:17px;">'.$errMsg.'</div>';
 }
 
-
+$profileurl=$row['profile_url'];
 $tempDir = 'temp/';
 $firstname = $row['firstname'];
 $lastname = $row['lastname'];
@@ -36,13 +36,16 @@ $linkedin = $row['linkedin'];
 $twitter = $row['twitter'];
 $instagram = $row['instagram'];
 $facebook= $row['facebook'];
-
+$folder= "img/";
+$new_file_name = strtolower($row['username']);
+$final_file=str_replace( '','-',$new_file_name);
 // QR_BarCode object
 $qr = new QR_BarCode();
 
 
+$qr->url($profileurl);
 // create content QR code
-$qr->content("$firstname",
+/*$qr->content("$firstname",
     "$lastname",
     "$email",
     "$jobtitle",
@@ -52,15 +55,21 @@ $qr->content("$firstname",
     "$linkedin",
     "$twitter",
     "$instagram",
-    "$facebook" );
+    "$facebook" );*/
 
 // display QR code image
-$qr->qrCode();
+//$qr->qrCode();
 
 // save QR code image
 
 /// Should save a new image for new user >>>> need to check later
-$qr->qrCode(500,'img/cw-qr.png');
-
+$qr->qrCode(500,$folder.$final_file);
+$url = $final_file.".png";
+$update="UPDATE user_profile SET card_url='$url' WHERE username='$username'";
+if ($connect->query($update))
+{
+    echo $username;
+    echo $url;
+}
 header('Location: downloadQR.php');
 ?>

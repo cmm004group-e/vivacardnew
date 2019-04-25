@@ -106,66 +106,66 @@ $facebook= $row['facebook'];
     <section class="main-container">
         <h2 style="text-transform: uppercase"><?php echo $row['firstname']; ?>'s card</h2>
 --->
-        <div class='card' style="margin-top: 150px; margin-left: 550px">
+    <div class='card' style="margin-top: 150px; margin-left: 550px">
 
-            <img  class='top-image' src='vivacarduploads/esha.JPG' alt="user photo" title="user photo">
-            <p style="text-transform: uppercase"><strong ><em> <font size="4.5"; color="teal">  Name: </font></em> </strong><?php echo $row['firstname']; ?> <?php echo $row['lastname']; ?></p>
+        <img  class='top-image' src='vivacarduploads/esha.JPG' alt="user photo" title="user photo">
+        <p style="text-transform: uppercase"><strong ><em> <font size="4.5"; color="teal">  Name: </font></em> </strong><?php echo $row['firstname']; ?> <?php echo $row['lastname']; ?></p>
 
-            <p style="text-transform: uppercase"><strong ><em> <font size="4.5"; color="teal">  Company: </font></em> </strong> <?php echo $row['company']; ?></p>
+        <p style="text-transform: uppercase"><strong ><em> <font size="4.5"; color="teal">  Company: </font></em> </strong> <?php echo $row['company']; ?></p>
 
-            <p style="text-transform: uppercase"><strong ><em> <font size="4.5"; color="teal">  Job Tilte: </font></em> </strong> <?php echo $row['jobtitle']; ?></p>
+        <p style="text-transform: uppercase"><strong ><em> <font size="4.5"; color="teal">  Job Tilte: </font></em> </strong> <?php echo $row['jobtitle']; ?></p>
 
-            <!--<a href="my_details.php"><img class='bottom-image' src='assets/Images/smartcard.png' alt="QR code" title="QR code"></a> -->
-            <div class="qr-field">
+        <!--<a href="my_details.php"><img class='bottom-image' src='assets/Images/smartcard.png' alt="QR code" title="QR code"></a> -->
+        <div class="qr-field">
 
-                <center>
-                    <div  style="margin-left: 70%; ">
-                        <?php echo '<img src="img/cw-qr.png" style="width:150px; height:150px; "><br>'; ?>
-                    </div>
-
-
-                    <!--  <a class="btn btn-primary submitBtn" style="width:210px; margin:5px 0;" href="download.php?file=<?/*php echo $filename; */?>.png ">Download QR Code</a>-->
+            <center>
+                <div  style="margin-left: 70%; ">
+                    <img src="img/<?php echo $row['card_url'] ?>" height="150px" width="150px" >"
+                </div>
 
 
-                </center>
-            </div>
-            <br>
-
-<a style="border-style: solid" id="btn-Convert-Html2Image" href="#">Download</a>
-<br/>
+                <!--  <a class="btn btn-primary submitBtn" style="width:210px; margin:5px 0;" href="download.php?file=<?/*php echo $filename; */?>.png ">Download QR Code</a>-->
 
 
+            </center>
+        </div>
+        <br>
+
+        <a style="border-style: solid" id="btn-Convert-Html2Image" href="#">Download</a>
+        <br/>
 
 
-<script style="margin-top: 150px; margin-left: 350px">
-    $(document).ready(function(){
 
 
-        var element = $("#vivacard"); // global variable
-        var getCanvas; // global variable
+        <script style="margin-top: 150px; margin-left: 350px">
+            $(document).ready(function(){
 
-        $("#btn-Convert-Html2Image").on('click', function () {
+
+            var element = $("#vivacard"); // global variable
+            var getCanvas; // global variable
+
+            $("#btn-Convert-Html2Image").on('click', function () {
             html2canvas(element, {
-                onrendered: function (canvas) {
+            onrendered: function (canvas) {
 
-                    getCanvas = canvas;
+            getCanvas = canvas;
 
-                }
+            }
 
             });
-        });
+            });
 
-        $("#btn-Convert-Html2Image").on('click', function () {
+            $("#btn-Convert-Html2Image").on('click', function () {
             var imgageData = getCanvas.toDataURL("image/png");
             // Now browser starts downloading it instead of just showing it
-    var newData = imgageData.replace(/^data:image\/png/, "data:application/octet-stream");
-    $("#btn-Convert-Html2Image").attr("download", "your_pic_name.png").attr("href", newData);
-    $image= newData;
-    file_put_contents('/img/image.png', $image);
-        });
+            var newData = imgageData.replace(/^data:image\/png/, "data:application/octet-stream");
+            $("#btn-Convert-Html2Image").attr("download", "your_pic_name.png").attr("href", newData);
+            $image= newData;
+            file_put_contents('/img/image.png', $image);
+            });
 
-    });
+            });
 
-</script>
-</body>
-</html>
+        </script>
+        </body>
+        </html>

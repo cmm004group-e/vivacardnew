@@ -51,16 +51,18 @@
 					echo '<div style="color:#FF0000;text-align:center;font-size:17px;">'.$errMsg.'</div>';
 				}
 			?>
-            <div style="background-color:grey; color:#FFFFFF; padding:10px;"><h3 ><b>You are signed in as <?php echo $_SESSION['firstname']; ?></b></h3></div>
+            <div style="background-color:grey; color:#FFFFFF; padding:10px;"><h3 style="text-transform: capitalize" ><b>You are signed in as <?php echo $_SESSION['firstname']; ?></b></h3></div>
 			<div style="margin: 15px">
-                <h4>Welcome, <?php echo $_SESSION['firstname']; ?></h4> <br>
+                <h4 style="text-transform: capitalize   ">Welcome, <?php echo $_SESSION['firstname']; ?></h4> <br>
                 <a href="viewcard.php">Your Card</a> <br>
 				<a href="update_profile.php">Update your Profile</a> <br>
                 <a href="upload.php">Upload Profile Picture</a> <br>
                 <a href="update_profile1.php">View your Details</a> <br>
                 <a href="viewcontact.php">View contacts</a> <br>
+                <br>
+                <br>
                 <a href="logout.php">Logout</a> <br>
-
+                <a href="delete_account.php?id=<?php echo $_SESSION['username']; ?>"> Delete Account</a>
 			</div>
 		</div>
 	</div>

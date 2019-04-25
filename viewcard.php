@@ -28,6 +28,7 @@ $linkedin = $row['linkedin'];
 $twitter = $row['twitter'];
 $instagram = $row['instagram'];
 $facebook= $row['facebook'];
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -77,12 +78,12 @@ $facebook= $row['facebook'];
 
         <div class='card'>
 
-            <img  class='top-image' src='vivacarduploads/esha.JPG' alt="user photo" title="user photo">
+            <img  class='top-image' src="vivacarduploads/<?php echo $row['profile_picture'] ?>" alt="user photo" title="user photo">
             <p style="text-transform: uppercase"><strong ><em> <font size="4.5"; color="teal">  Name: </font></em> </strong><?php echo $row['firstname']; ?> <?php echo $row['lastname']; ?></p>
 
             <p style="text-transform: uppercase"><strong ><em> <font size="4.5"; color="teal">  Company: </font></em> </strong> <?php echo $row['company']; ?></p>
 
-            <p style="text-transform: uppercase"><strong ><em> <font size="4.5"; color="teal">  Job Tilte: </font></em> </strong> <?php echo $row['jobtitle']; ?></p>
+            <p style="text-transform: uppercase"><strong ><em> <font size="4.5"; color="teal">  Job Title: </font></em> </strong> <?php echo $row['jobtitle']; ?></p>
 
 
 
@@ -91,7 +92,7 @@ $facebook= $row['facebook'];
 
                 <center>
                     <div  style="margin-left: 70%; ">
-                        <?php echo '<img src="img/cw-qr.png" style="width:150px; height:150px; "><br>'; ?>
+                        <img src="img/<?php echo $row['card_url'] ?>" height="150px" width="150px">
                     </div>
                     <!--  <a class="btn btn-primary submitBtn" style="width:210px; margin:5px 0;" href="download.php?file=<?/*php echo $filename; */?>.png ">Download QR Code</a>-->
 

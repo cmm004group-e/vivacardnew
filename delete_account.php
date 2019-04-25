@@ -1,61 +1,35 @@
 <?php
-require 'config.php';
+/**
+ * Created by PhpStorm.
+ * User: Pauline
+ * Date: 15/04/2019
+ * Purpose: Delete user account
+ */
 
-if(isset($_POST['login'])) {
-    $errMsg = '';
-
-    // Get data from FORM
-    $username = $_POST['username'];
-    $password = $_POST['password'];
-
-    if($username == '')
-        $errMsg = 'Enter username';
-    if($password == '')
-        $errMsg = 'Enter password';
-
-    if($errMsg == '') {
-        try {
-            $stmt = $connect->prepare('SELECT id, firstname, lastname, email, username, password, jobtitle, company, job_desc, telephone, linkedin, twitter, instagram, facebook FROM user_profile WHERE username = :username');
-            $stmt->execute(array(
-                ':username' => $username
-            ));
-            $data = $stmt->fetch(PDO::FETCH_ASSOC);
-
-            if($data == false){
-                $errMsg = "User $username not found.";
-            }
-            else {
-                if(password_verify($password, $data['password'])){
-                    $_SESSION['firstname'] = $data['firstname'];
-                    $_SESSION['lastname'] = $data['lastname'];
-                    $_SESSION['email'] = $data['email'];
-                    $_SESSION['username'] = $data['username'];
-                    $_SESSION['password'] = $data['password'];
-                    $_SESSION['jobtitle'] = $data['jobtitle'];
-                    $_SESSION['company'] = $data['company'];
-                    $_SESSION['job_desc'] = $data['job_desc'];
-                    $_SESSION['telephone'] = $data['telephone'];
-                    $_SESSION['linkedin'] = $data['linkedin'];
-                    $_SESSION['twitter'] = $data['twitter'];
-                    $_SESSION['instagram'] = $data['instagram'];
-                    $_SESSION['facebook'] = $data['facebook'];
-
-
-
-                    header('Location: dashboard.php');
-                    exit;
-                }
-                else
-                    $errMsg = 'Password not match.';
-            }
-        }
-        catch(PDOException $e) {
-            $errMsg = $e->getMessage();
-        }
-    }
+try{
+    require_once('config.php');
+    $connect->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+}catch(Exception $e){
+    $error = $e->getMessage();
 }
-?>
+if (!IsSet($_SESSION["username"]))		//user variable must exist in session to stay here
+    header("Location: login.php");	//if not, go back to login page
+$username=$_SESSION["username"];
 
+/*
+$DelSql = "DELETE FROM user_profile WHERE username='$username'";
+$result = $connect->prepare($DelSql);
+$res = $result->execute(array($_GET['username']));
+if($res){
+  echo "You have successfully deleted your account";
+}else{
+    echo "Failed to Delete Contact";
+}
+session_destroy();
+ echo "<br><br><a href='index.php'>Return to Viva home page</a>"
+
+*/
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -104,14 +78,22 @@ if(isset($_POST['login'])) {
                 }
                 ?>
                 <section class="main-container">
-                    <div style="background-color:grey; color:#FFFFFF; padding:10px;"><h2>Sign in</h2></div>
-                    <div style="margin: 15px">
-                    </div>
-                    <form class="signup-form" action="" method="post">
-                        <input type="text" name="username" required="required" placeholder="Username/E-mail" value="<?php if(isset($_POST['username'])) echo $_POST['username'] ?>" autocomplete="off" class="box"/><br /><br />
-                        <input type="password" name="password" required="required" maxlength="20" placeholder="Password" value="<?php if(isset($_POST['password'])) echo $_POST['password'] ?>" autocomplete="off" class="box" /><br/><br />
-                        <input type="submit" name='login' value="Login" class='submit'/><br />
-                    </form>
+                    <?php
+
+                    $DelSql = "DELETE FROM user_profile WHERE username='$username'";
+                    $result = $connect->prepare($DelSql);
+                    $res = $result->execute(array($username));
+                    if($res){
+                        echo "You have successfully deleted your account";
+                    }else{
+                        echo "Failed to Delete Contact";
+                    }
+                    session_destroy();
+                    echo "<br><br><a href='index.php' class='delete'>Return to Viva home page</a>"
+
+
+                    ?>
+
                 </section>
 
                 <!---Footer start--->
@@ -165,3 +147,4 @@ if(isset($_POST['login'])) {
                 <!---Footer end--->
     </body>
 </html>
+

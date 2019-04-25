@@ -11,31 +11,31 @@ if(isset($_POST['register'])) {
     $username = $_POST['username'];
     $password = $_POST['password'];
     $c_password = $_POST['c_password'];
-
-   /* $jobtitle = $_POST['jobtitle'];
-    $company = $_POST['company'];
-    $job_desc = $_POST['job_desc'];
-    $telephone = $_POST['telephone'];
-    $linkedin = $_POST['linkedin'];
-    $twitter= $_POST['twitter'];
-    $instagram = $_POST['instagram'];
-    $facebook= $_POST['facebook'];*/
+    $profile_url = "http://vivacardapp.eu-west-2.elasticbeanstalk.com/my_details.php?user=".$username;
+    /* $jobtitle = $_POST['jobtitle'];
+     $company = $_POST['company'];
+     $job_desc = $_POST['job_desc'];
+     $telephone = $_POST['telephone'];
+     $linkedin = $_POST['linkedin'];
+     $twitter= $_POST['twitter'];
+     $instagram = $_POST['instagram'];
+     $facebook= $_POST['facebook'];*/
 
     if($firstname == '')
         $errMsg = 'Enter firstname';
     if($lastname == '')
         $errMsg = 'Enter lastname';
-   if($email == '')
+    if($email == '')
         $errMsg = 'Enter email';
-   if($username == '')
+    if($username == '')
         $errMsg = 'Enter username';
     if($password == '')
         $errMsg = 'Enter password';
     if($c_password == '')
-    $errMsg = 'Confirm password';
+        $errMsg = 'Confirm password';
 
     if($password != $c_password)
-    $errMsg = 'Password not matched.';
+        $errMsg = 'Password not matched.';
 
 
 
@@ -47,40 +47,41 @@ if(isset($_POST['register'])) {
 
         $stmt1->execute();
 
-          $row = $stmt1->fetch(PDO::FETCH_ASSOC);
+        $row = $stmt1->fetch(PDO::FETCH_ASSOC);
 
         if($row['num'] > 0) {
 
             die('Username Already Exists !!!');
-             }
         }
+    }
 
 
-            try {
-                $stmt = $connect->prepare('INSERT INTO user_profile (firstname, lastname, email, username, password )VALUES (:firstname, :lastname, :email, :username, :password)');
-                $stmt->execute(array(
-                    ':firstname' => $firstname,
-                    ':lastname' => $lastname,
-                    ':email' => $email,
-                    ':username' => $username,
-                    ':password' => $password,
+    try {
+        $stmt = $connect->prepare('INSERT INTO user_profile (firstname, lastname, email, username, password,profile_url )VALUES (:firstname, :lastname, :email, :username, :password, :profile_url)');
+        $stmt->execute(array(
+            ':firstname' => $firstname,
+            ':lastname' => $lastname,
+            ':email' => $email,
+            ':username' => $username,
+            ':password' => password_hash($password,PASSWORD_DEFAULT),
+             ':profile_url' => $profile_url
 
 
-                    /*':jobtitle' => $jobtitle,
-                    ':company' => $company,
-                    ':job_desc' => $job_desc,
-                    ':telephone' => $telephone,
-                    ':linkedin' => $linkedin,
-                    ':twitter' => $twitter,
-                    ':instagram' => $instagram,
-                    ':facebook' => $facebook */
+            /*':jobtitle' => $jobtitle,
+            ':company' => $company,
+            ':job_desc' => $job_desc,
+            ':telephone' => $telephone,
+            ':linkedin' => $linkedin,
+            ':twitter' => $twitter,
+            ':instagram' => $instagram,
+            ':facebook' => $facebook */
 
-                ));
-                header('Location: register.php?action=joined');
-                exit;
-            } catch (PDOException $e) {
-                echo $e->getMessage();
-            }
+        ));
+        header('Location: register.php?action=joined');
+        exit;
+    } catch (PDOException $e) {
+        echo $e->getMessage();
+    }
 
 
 }
@@ -132,26 +133,26 @@ if(isset($_GET['action']) && $_GET['action'] == 'joined') {
         </nav>
     </header>
     <!--- Header End--->
-	<div align="center">
-		<div style=" border: solid 1px #006D9C; " align="center">
-			<?php
-				if(isset($errMsg)){
-					echo '<div style="color:green;text-align:center;font-size:17px;">'.$errMsg.'</div>';
-				}
-			?>
+    <div align="center">
+        <div style=" border: solid 1px #006D9C; " align="center">
+            <?php
+            if(isset($errMsg)){
+                echo '<div style="color:green;text-align:center;font-size:17px;">'.$errMsg.'</div>';
+            }
+            ?>
             <section class="main-container">
-			<div style="background-color:grey; color:#FFFFFF; padding:10px;"><h3>Create account</h3></div>
-			<div style="margin: 15px">
-				<form class="signup-form" action="" method="post">
-                    <input type="text" name="firstname" required="required" placeholder="First name" value="<?php if(isset($_POST['firstname'])) echo $_POST['firstname'] ?>" autocomplete="off" class="box"/><br /><br />
-                    <input type="text" name="lastname" required="required" placeholder="Last name" value="<?php if(isset($_POST['lastname'])) echo $_POST['lastname'] ?>" autocomplete="off" class="box"/><br /><br />
-                    <input type="email" name="email" required="required" placeholder="E-mail" value="<?php if(isset($_POST['email'])) echo $_POST['email'] ?>" autocomplete="off" class="box"/><br /><br />
-                    <input type="text" name="username" required="required" placeholder="Username" value="<?php if(isset($_POST['username'])) echo $_POST['username'] ?>" autocomplete="off" class="box"/><br /><br />
-                    <input type="password" name="password" required="required" maxlength="20" placeholder="Password" value="<?php if(isset($_POST['password'])) echo $_POST['password'] ?>" autocomplete="off" class="box"/><br /><br />
-                    <input type="password" name="c_password" required="required" maxlength="20" placeholder=" Confirm Password" value="<?php if(isset($_POST['c_password'])) echo $_POST['c_password'] ?>" autocomplete="off" class="box"/><br /><br />
+                <div style="background-color:grey; color:#FFFFFF; padding:10px;"><h3>Create account</h3></div>
+                <div style="margin: 15px">
+                    <form class="signup-form" action="" method="post">
+                        <input type="text" name="firstname" required="required" placeholder="First name" value="<?php if(isset($_POST['firstname'])) echo $_POST['firstname'] ?>" autocomplete="off" class="box"/><br /><br />
+                        <input type="text" name="lastname" required="required" placeholder="Last name" value="<?php if(isset($_POST['lastname'])) echo $_POST['lastname'] ?>" autocomplete="off" class="box"/><br /><br />
+                        <input type="email" name="email" required="required" placeholder="E-mail" value="<?php if(isset($_POST['email'])) echo $_POST['email'] ?>" autocomplete="off" class="box"/><br /><br />
+                        <input type="text" name="username" required="required" placeholder="Username" value="<?php if(isset($_POST['username'])) echo $_POST['username'] ?>" autocomplete="off" class="box"/><br /><br />
+                        <input type="password" name="password" required="required" maxlength="20" placeholder="Password" value="<?php if(isset($_POST['password'])) echo $_POST['password'] ?>" autocomplete="off" class="box"/><br /><br />
+                        <input type="password" name="c_password" required="required" maxlength="20" placeholder=" Confirm Password" value="<?php if(isset($_POST['c_password'])) echo $_POST['c_password'] ?>" autocomplete="off" class="box"/><br /><br />
 
 
-                 <!--  <input type="text" name="jobtitle" placeholder="Job Title" value=" <?php /*if(isset($_POST['jobtitle'])) echo $_POST['jobtitle'] ?>" autocomplete="off" class="box"/><br /><br />
+                        <!--  <input type="text" name="jobtitle" placeholder="Job Title" value=" <?php /*if(isset($_POST['jobtitle'])) echo $_POST['jobtitle'] ?>" autocomplete="off" class="box"/><br /><br />
                     <input type="text" name="company" placeholder="Company" value="<?php if(isset($_POST['company'])) echo $_POST['company'] ?>" autocomplete="off" class="box"/><br /><br />
                     <input type="text" name="job_desc" placeholder="Job Desc" value="<?php if(isset($_POST['job_desc'])) echo $_POST['job_desc'] ?>" autocomplete="off" class="box"/><br /><br />
                     <input type="number" name="telephone" placeholder="Telephone" value="<?php if(isset($_POST['telephone'])) echo $_POST['telephone'] ?>" autocomplete="off" class="box"/><br /><br />
@@ -161,12 +162,12 @@ if(isset($_GET['action']) && $_GET['action'] == 'joined') {
                     <input type="url" name="facebook" placeholder="Facebook" value="<?php if(isset($_POST['facebook'])) echo $_POST['facebook'] */?>" autocomplete="off" class="box"/><br /><br /> -->
 
 
-					<input type="submit" name='register' value="Register" class='submit'>
-				</form>
-			</div>
-		</div>
-    </section>
-	</div>
+                        <input type="submit" name='register' value="Register" class='submit'>
+                    </form>
+                </div>
+        </div>
+        </section>
+    </div>
     <!---Footer start--->
     <div class="container-fluid text-center">
         <footer class=“col-md-12">

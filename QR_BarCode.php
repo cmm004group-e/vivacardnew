@@ -11,10 +11,12 @@ class QR_BarCode{
      * @param string $url
      */
 
-    public function content($firstname = null, $lastname = null, $email = null,$jobtitle = null, $company = null,$job_desc = null, $telephone = null,$linkedin = null, $twitter = null,$instagram = null, $facebook= null) {
-        $this->codeData = "Firstname:{$firstname};Lastname:{$lastname};Email:{$email};Jobtitle: {$jobtitle};Company:{$company};Job Description: {$job_desc};Telephone:{$telephone};Linkedin: {$linkedin};Twitter:{$twitter};Instagram: {$instagram};Facebook:{$facebook}";
+    public function url($url = null){
+        $this->codeData = preg_match("#^https?\:\/\/#", $url) ? $url : "http://{$url}";
     }
 
+    //  public function content($firstname = null, $lastname = null, $email = null,$jobtitle = null, $company = null,$job_desc = null, $telephone = null,$linkedin = null, $twitter = null,$instagram = null, $facebook= null) {
+    //    $this->codeData = "Firstname:{$firstname};Lastname:{$lastname};Email:{$email};Jobtitle: {$jobtitle};Company:{$company};Job Description: {$job_desc};Telephone:{$telephone};Linkedin: {$linkedin};Twitter:{$twitter};Instagram: {$instagram};Facebook:{$facebook}";
     /**
      * Generate QR code image
      *
